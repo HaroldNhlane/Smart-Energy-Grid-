@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Grid Dashboard</title>
+    <link rel="stylesheet" href="{% static 'pages/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Connection Status Indicator -->
+    <div id="connection-status" class="connection-status connected">
+        <i class="fas fa-wifi"></i>
+        <span>Connected</span>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-bolt"></i> Smart Grid Dashboard</h1>
+            <div class="header-controls">
+                <button class="refresh-btn" id="refresh-btn">
+                    <i class="fas fa-sync-alt"></i> Refresh Data
+                </button>
+                <div class="system-status">
+                    <div class="status-dot"></div>
+                    <span>System Online</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="metric-cards">
+            <div class="metric-card">
+                <h3><i class="fas fa-temperature-high"></i> Temperature</h3>
+                <p id="latest-temp">N/A<span class="unit">°C</span></p>
+                <div class="trend-indicator">
+                    <span class="trend up"><i class="fas fa-arrow-up"></i> 0.0</span>
+                </div>
+            </div>
+            <div class="metric-card">
+                <h3><i class="fas fa-bolt"></i> Voltage</h3>
+                <p id="latest-voltage">N/A<span class="unit">V</span></p>
+                <div class="trend-indicator">
+                    <span class="trend down"><i class="fas fa-arrow-down"></i> 0.0</span>
+                </div>
+            </div>
+            <div class="metric-card">
+                <h3><i class="fas fa-tachometer-alt"></i> Current</h3>
+                <p id="latest-current">N/A<span class="unit">A</span></p>
+                <div class="trend-indicator">
+                    <span class="trend up"><i class="fas fa-arrow-up"></i> 0.0</span>
+                </div>
+            </div>
+            <div class="metric-card">
+                <h3><i class="fas fa-wave-square"></i> Vibration</h3>
+                <p id="latest-vibration">N/A<span class="unit">m/s²</span></p>
+                <div class="trend-indicator">
+                    <span class="trend down"><i class="fas fa-arrow-down"></i> 0.0</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="status-indicator-container">
+            <div class="status-header">
+                <h3><i class="fas fa-chart-line"></i> Prediction Status</h3>
+                <span>Last 24 hours</span>
+            </div>
+            <div class="status-content">
+                <div id="prediction-status" class="status-indicator normal">Normal Operation</div>
+                <p class="status-details">System operating within normal parameters. No issues detected.</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="status-chart"></canvas>
+            </div>
+        </section>
+
+        <section class="alerts-container">
+            <div class="alerts-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> Recent Alerts</h3>
+                <div class="alert-count">0</div>
+            </div>
+            <ul id="alerts-list">
+                <!-- The JavaScript will dynamically populate this with alerts like:
+                <li class="critical">
+                    <i class="fas fa-temperature-high alert-icon critical"></i>
+                    <div class="alert-content">
+                        <div class="alert-message">CRITICAL: Temperature 38.25°C exceeded threshold (35°C)</div>
+                        <div class="alert-meta">
+                            <span class="alert-type">Overheating</span>
+                            <span class="alert-device">• Device: Transformer A</span>
+                            <span class="alert-device-id">• ID: 1</span>
+                        </div>
+                        <div class="alert-time">5 minutes ago</div>
+                    </div>
+                    <i class="fas fa-chevron-right alert-arrow"></i>
+                </li>
+                -->
+                <li class="no-alerts">
+                    <i class="fas fa-check-circle alert-icon"></i>
+                    <div class="alert-content">
+                        <div class="alert-message">No recent alerts</div>
+                        <div class="alert-time">All systems normal</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <section class="data-table-container">
+            <div class="table-header">
+                <h3><i class="fas fa-table"></i> Sensor Readings</h3>
+                <div class="table-controls">
+                    <button><i class="fas fa-download"></i> Export</button>
+                    <button><i class="fas fa-filter"></i> Filter</button>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timestamp <i class="fas fa-sort"></i></th>
+                        <th>Device <i class="fas fa-sort"></i></th>
+                        <th>Current (A) <i class="fas fa-sort"></i></th>
+                        <th>Temperature (°C) <i class="fas fa-sort"></i></th>
+                        <th>Vibration (m/s²) <i class="fas fa-sort"></i></th>
+                        <th>Voltage (V) <i class="fas fa-sort"></i></th>
+                    </tr>
+                </thead>
+                <tbody id="data-table-body">
+                    <tr>
+                        <td colspan="6" class="no-data">Loading sensor data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <footer>
+            <span>Last Updated: <span id="last-updated">Loading...</span></span>
+            <span>Smart Grid Monitoring System v2.1</span>
+            <div>
+                Created by: Harold Nhlane 2025
+                <a href="mailto:haroldnhlane@yahoo.com">Email</a> |
+                <a href="https://www.linkedin.com/in/harold-nhlane/" target="_blank">LinkedIn</a> |
+                <a href="https://github.com/HaroldNhlane" target="_blank">GitHub</a>
+            </div>
+        </footer>
+    </div>
+    <script src="{% static 'pages/script.js' %}"></script>
+</body>
+</html>

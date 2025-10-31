@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Grid Dashboard</title>
+    <link rel="stylesheet" href="{% static 'pages/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-bolt"></i> Smart Grid Dashboard</h1>
+            <div class="header-controls">
+                <button class="refresh-btn" id="refresh-btn">
+                    <i class="fas fa-sync-alt"></i> Refresh Data
+                </button>
+                <div class="system-status">
+                    <div class="status-dot"></div>
+                    <span>System Online</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="metric-cards">
+            <div class="metric-card">
+                <h3><i class="fas fa-temperature-high"></i> Temperature</h3>
+                <p id="latest-temp">N/A<span class="unit">°C</span></p>
+                <div class="trend up"><i class="fas fa-arrow-up"></i> 2.3% from last hour</div>
+            </div>
+            <div class="metric-card">
+                <h3><i class="fas fa-bolt"></i> Voltage</h3>
+                <p id="latest-voltage">N/A<span class="unit">V</span></p>
+                <div class="trend down"><i class="fas fa-arrow-down"></i> 0.8% from last hour</div>
+            </div>
+            <div class="metric-card">
+                <h3><i class="fas fa-tachometer-alt"></i> Current</h3>
+                <p id="latest-current">N/A<span class="unit">A</span></p>
+                <div class="trend up"><i class="fas fa-arrow-up"></i> 1.2% from last hour</div>
+            </div>
+            <div class="metric-card">
+                <h3><i class="fas fa-wave-square"></i> Vibration</h3>
+                <p id="latest-vibration">N/A<span class="unit">m/s²</span></p>
+                <div class="trend down"><i class="fas fa-arrow-down"></i> 0.3% from last hour</div>
+            </div>
+        </section>
+
+        <section class="status-indicator-container">
+            <div class="status-header">
+                <h3><i class="fas fa-chart-line"></i> Prediction Status</h3>
+                <span>Last 24 hours</span>
+            </div>
+            <div class="status-content">
+                <div id="prediction-status" class="status-indicator normal">Normal Operation</div>
+                <p class="status-details">System operating within normal parameters. No issues detected.</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="status-chart"></canvas>
+            </div>
+        </section>
+
+        <section class="alerts-container">
+            <div class="alerts-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> Recent Alerts</h3>
+                <div class="alert-count">2</div>
+            </div>
+            <ul id="alerts-list">
+                <li class="warning">
+                    <i class="fas fa-exclamation-circle alert-icon warning"></i>
+                    <div class="alert-content">
+                        <div>Temperature approaching threshold (42.7°C)</div>
+                        <div class="alert-time">10 minutes ago</div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </li>
+                <li>
+                    <i class="fas fa-exclamation-circle alert-icon"></i>
+                    <div class="alert-content">
+                        <div>Voltage spike detected in Sector B</div>
+                        <div class="alert-time">45 minutes ago</div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </li>
+            </ul>
+        </section>
+
+        <section class="data-table-container">
+            <div class="table-header">
+                <h3><i class="fas fa-table"></i> Sensor Readings</h3>
+                <div class="table-controls">
+                    <button><i class="fas fa-download"></i> Export</button>
+                    <button><i class="fas fa-filter"></i> Filter</button>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timestamp <i class="fas fa-sort"></i></th>
+                        <th>Device <i class="fas fa-sort"></i></th>
+                        <th>Current (A) <i class="fas fa-sort"></i></th>
+                        <th>Temperature (°C) <i class="fas fa-sort"></i></th>
+                        <th>Vibration (m/s²) <i class="fas fa-sort"></i></th>
+                        <th>Voltage (V) <i class="fas fa-sort"></i></th>
+                    </tr>
+                </thead>
+                <tbody id="data-table-body">
+                    <tr>
+                        <td>2023-07-15 14:30:22</td>
+                        <td>Transformer A</td>
+                        <td class="value-normal">14.8</td>
+                        <td class="value-warning">41.2</td>
+                        <td class="value-normal">0.08</td>
+                        <td class="value-normal">232.1</td>
+                    </tr>
+                    <tr>
+                        <td>2023-07-15 14:25:17</td>
+                        <td>Transformer B</td>
+                        <td class="value-normal">15.1</td>
+                        <td class="value-normal">38.7</td>
+                        <td class="value-normal">0.09</td>
+                        <td class="value-high">245.3</td>
+                    </tr>
+                    <tr>
+                        <td>2023-07-15 14:20:45</td>
+                        <td>Substation C</td>
+                        <td class="value-normal">16.2</td>
+                        <td class="value-normal">39.5</td>
+                        <td class="value-normal">0.07</td>
+                        <td class="value-normal">231.8</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <footer>
+            <span>Last Updated: <span id="last-updated">2023-07-15 14:35:12</span></span>
+            <span>Smart Grid Monitoring System v2.1</span>
+            <div>
+                Created by: Harold Nhlane 2025
+                <a href="mailto:haroldnhlane@yahoo.com">Email</a> |
+                <a href="https://www.linkedin.com/in/harold-nhlane/" target="_blank">LinkedIn</a> |
+                <a href="https://github.com/HaroldNhlane" target="_blank">GitHub</a>
+            </div>
+        </footer>
+    </div>
+    <script src="{% static 'pages/script.js' %}"></script>
+</body>
+</html>

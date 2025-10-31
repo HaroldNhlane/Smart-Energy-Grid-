@@ -1,0 +1,62 @@
+-- Database: grid_db
+
+-- Table structure for table `auth_user` (Django's built-in User model)
+CREATE TABLE `auth_user` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `password` varchar(128) NOT NULL,
+  `last_login` datetime(6) DEFAULT NULL,
+  `is_superuser` tinyint(1) NOT NULL,
+  `username` varchar(150) NOT NULL,
+  `first_name` varchar(150) NOT NULL,
+  `last_name` varchar(150) NOT NULL,
+  `email` varchar(254) NOT NULL,
+  `is_staff` tinyint(1) NOT NULL,
+  `is_active` tinyint(1) NOT NULL,
+  `date_joined` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table structure for table `grid_device`
+CREATE TABLE `grid_device` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `priority` int NOT NULL DEFAULT '1',
+  `status` varchar(50) NOT NULL DEFAULT 'disconnected',
+  `user_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `grid_device_user_id_6b9a0b8a_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `grid_device_user_id_6b9a0b8a_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table structure for table `grid_sensordata`
+CREATE TABLE `grid_sensordata` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `timestamp` datetime(6) NOT NULL,
+  `reading_value` double NOT NULL,
+  `reading_type` varchar(50) NOT NULL,
+  `device_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `grid_sensordata_device_id_5c8a3c3f_fk_grid_device_id` (`device_id`),
+  CONSTRAINT `grid_sensordata_device_id_5c8a3c3f_fk_grid_device_id` FOREIGN KEY (`device_id`) REFERENCES `grid_device` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table structure for table `grid_alert`
+CREATE TABLE `grid_alert` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `message` varchar(255) NOT NULL,
+  `timestamp` datetime(6) NOT NULL,
+  `alert_type` varchar(50) NOT NULL,
+  `device_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `grid_alert_device_id_9d2a7e4d_fk_grid_device_id` (`device_id`),
+  CONSTRAINT `grid_alert_device_id_9d2a7e4d_fk_grid_device_id` FOREIGN KEY (`device_id`) REFERENCES `grid_device` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+To implement this in MySQL, you would:
+
+Create a MySQL database
+
+Configure Django to use this MySQL database in settings.py
+
+Run python manage.py migrate which would generate this exact schema
